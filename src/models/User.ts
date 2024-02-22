@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-interface IUserSchema {
+export interface IUserSchema {
     username: string;
     email: string;
     password: string;

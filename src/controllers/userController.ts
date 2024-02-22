@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import { User } from "../models/User";
+import { createJwtToken } from "../lib/jwt";
 
 export const signup = async (req: Request, res: Response) => {
     const { username, email, password }: { username: string; email: string; password: string } = req.body;
@@ -18,22 +18,14 @@ export const signup = async (req: Request, res: Response) => {
         }
         const salt = await bcrypt.genSalt();
         const hashedPassword = await bcrypt.hash(password, salt);
+
         const user = await User.create({
             email: email,
             password: hashedPassword,
             username: username,
         });
 
-        const jwtToken = jwt.sign(
-            {
-                _id: user._id,
-                email: user.email,
-            },
-            process.env.JWT_KEY!,
-            {
-                expiresIn: "1d",
-            }
-        );
+        const jwtToken = createJwtToken(user);
 
         res.cookie("token", jwtToken, {
             path: "/",
@@ -76,16 +68,7 @@ export const login = async (req: Request, res: Response) => {
             return res.status(400).send({ error: true, message: "wrong password" });
         }
 
-        const jwtToken = jwt.sign(
-            {
-                _id: existingUser._id,
-                email: existingUser.email,
-            },
-            process.env.JWT_KEY!,
-            {
-                expiresIn: "1d",
-            }
-        );
+        const jwtToken = createJwtToken(existingUser);
 
         res.cookie("token", jwtToken, {
             path: "/",
