@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import { User } from "../models/User";
 import { createJwtToken } from "../lib/jwt";
+import { AuthRequest } from "../middlewares/verifyToken";
 
 export const signup = async (req: Request, res: Response) => {
     const { username, email, password }: { username: string; email: string; password: string } = req.body;
@@ -102,20 +103,22 @@ export const logout = async (req: Request, res: Response) => {
     }
 };
 
-// export const userDetails = async (req: Request, res: Response) => {
-//     const userId = req._id;
-//     try {
-//         const user = await User.findById(userId);
-//         if (!user) {
-//             return res.status(404).send({ message: "Cannot find the user!" });
-//         }
-//         return res.status(200).send({
-//             username: user.username,
-//             picture: user.picture,
-//             email: user.email,
-//             savedCodes: user.savedCodes,
-//         });
-//     } catch (error) {
-//         return res.status(500).send({ message: "Cannot fetch user details" });
-//     }
-// };
+export const userDetails = async (req: AuthRequest, res: Response) => {
+    const userId = req._id;
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).send({ error: true, message: "Cannot find the user!" });
+        }
+        return res.status(200).json({
+            error: false, message: "User found", data: {
+                username: user.username,
+                picture: user.picture,
+                email: user.email,
+                savedCodes: user.savedCodes,
+            }
+        });
+    } catch (error) {
+        return res.status(500).send({ message: "Cannot fetch user details" });
+    }
+};
