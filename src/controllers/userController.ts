@@ -66,7 +66,7 @@ export const login = async (req: Request, res: Response) => {
         );
 
         if (!passwordMatched) {
-            return res.status(400).send({ error: true, message: "wrong password" });
+            return res.status(400).json({ error: true, message: "Wrong password" });
         }
 
         const jwtToken = createJwtToken(existingUser);
@@ -97,9 +97,9 @@ export const login = async (req: Request, res: Response) => {
 export const logout = async (req: Request, res: Response) => {
     try {
         res.clearCookie("token");
-        return res.status(200).send({ message: "logged out successfully!" });
+        return res.status(200).send({ error: false, message: "logged out successfully!" });
     } catch (error) {
-        return res.status(500).send({ message: "Error logging out!", error });
+        return res.status(500).send({ error: true, message: error });
     }
 };
 
@@ -112,6 +112,7 @@ export const userDetails = async (req: AuthRequest, res: Response) => {
         }
         return res.status(200).json({
             error: false, message: "User found", data: {
+                userId: user._id,
                 username: user.username,
                 picture: user.picture,
                 email: user.email,

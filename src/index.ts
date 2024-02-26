@@ -8,6 +8,7 @@ import fs from 'fs'
 const app = express();
 
 import { userRouter } from "./routes/userRoutes";
+import { codeRouter } from "./routes/codeRoutes";
 
 app.use(express.json());
 app.use(cookieParser());
@@ -15,6 +16,7 @@ app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
 config();
 
 app.use("/user", userRouter);
+app.use('/code', codeRouter)
 
 app.use('/test', (req, res) => {
     // Create and write to a Python file
@@ -37,7 +39,7 @@ app.use('/test', (req, res) => {
     });
 });
 
-// dbConnect();
+dbConnect();
 app.listen(4000, () => {
     console.log("Server is running on port " + 4000);
 });
