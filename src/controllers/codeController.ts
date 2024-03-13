@@ -18,10 +18,7 @@ export const createNewRepl = async (req: AuthRequest, res: Response) => {
         const repl = await Code.create({ userId, title, language, userName: user.username })
 
         return res.status(200).json({
-            error: false, message: `${language} repl created`, data: {
-                replId: repl._id,
-                title: repl.title,
-            }
+            error: false, message: `${language} repl created`, data: repl
         })
     } catch (error) {
         console.log(error)
@@ -39,8 +36,19 @@ export const loadCode = async (req: Request, res: Response) => {
         }
 
         return res.status(200).json({
-            error: false, message: `Repl Data fetched`, repl
+            error: false, message: `Repl Data fetched`, data: repl
         })
+    } catch (error) {
+        console.log(error)
+        return res.status(500).send({ error: true, message: error });
+    }
+}
+
+export const getAllCodes = async (req: AuthRequest, res: Response) => {
+    const userId = req._id;
+    try {
+        const codes = await Code.find({ userId: userId });
+        return res.json({ error: false, message: 'ok', data: codes })
     } catch (error) {
         console.log(error)
         return res.status(500).send({ error: true, message: error });
@@ -59,10 +67,8 @@ export const compilePythonCode = async (req: Request, res: Response) => {
             return res.status(500).send('Internal Server Error');
         }
 
-        console.log(`Python file output: ${stdout}`);
-
         // Remove the temporary Python file
-        // fs.unlinkSync('temp.py');
+        fs.unlinkSync('temp.py');
 
         res.status(200).json(stdout);
     });

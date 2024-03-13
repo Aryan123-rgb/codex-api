@@ -36,6 +36,6 @@ app.use('/test', (req, res) => {
     });
 });
 (0, dbConnect_1.dbConnect)();
-app.listen(4000, () => {
+app.listen(process.env.PORT, () => {
     console.log("Server is running on port " + 4000);
 });

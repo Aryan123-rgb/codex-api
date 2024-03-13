@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.compilePythonCode = exports.loadCode = exports.createNewRepl = void 0;
+exports.compilePythonCode = exports.getAllCodes = exports.loadCode = exports.createNewRepl = void 0;
 const Code_1 = require("../models/Code");
 const User_1 = require("../models/User");
 const fs_1 = __importDefault(require("fs"));
@@ -47,6 +47,18 @@ const loadCode = async (req, res) => {
     }
 };
 exports.loadCode = loadCode;
+const getAllCodes = async (req, res) => {
+    const userId = req._id;
+    try {
+        const codes = await Code_1.Code.find({ userId: userId });
+        return res.json({ error: false, message: 'ok', data: codes });
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(500).send({ error: true, message: error });
+    }
+};
+exports.getAllCodes = getAllCodes;
 const compilePythonCode = async (req, res) => {
     const { code } = req.body;
     const pythonCode = `${code}`;
@@ -57,9 +69,8 @@ const compilePythonCode = async (req, res) => {
             console.error(`Error executing Python file: ${error.message}`);
             return res.status(500).send('Internal Server Error');
         }
-        console.log(`Python file output: ${stdout}`);
         // Remove the temporary Python file
-        // fs.unlinkSync('temp.py');
+        fs_1.default.unlinkSync('temp.py');
         res.status(200).json(stdout);
     });
 };
