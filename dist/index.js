@@ -13,6 +13,7 @@ const app = (0, express_1.default)();
 const userRoutes_1 = require("./routes/userRoutes");
 const codeRoutes_1 = require("./routes/codeRoutes");
 const body_parser_1 = __importDefault(require("body-parser"));
+console.log(process.env.REACT_APP_BASE_URL);
 app.use((0, cors_1.default)({
     credentials: true,
     origin: process.env.REACT_APP_BASE_URL,

@@ -8,7 +8,7 @@ config();
 import { userRouter } from "./routes/userRoutes";
 import { codeRouter } from "./routes/codeRoutes";
 import bodyParser from 'body-parser'
-
+console.log(process.env.REACT_APP_BASE_URL)
 app.use(
     cors({
         credentials: true,
