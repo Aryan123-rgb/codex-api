@@ -29,7 +29,10 @@ export const signup = async (req: Request, res: Response) => {
         const jwtToken = createJwtToken(user);
 
         res.cookie("token", jwtToken, {
-            path: "/"
+            secure: true,
+            path: "/",
+            sameSite: 'none',
+            httpOnly: true
         });
 
         return res.status(201).send({
@@ -69,7 +72,10 @@ export const login = async (req: Request, res: Response) => {
         const jwtToken = createJwtToken(existingUser);
 
         res.cookie("token", jwtToken, {
-            path: "/"
+            path: "/",
+            secure: true,
+            httpOnly: true,
+            sameSite: 'none'
         });
 
         return res.status(200).send({

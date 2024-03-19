@@ -29,7 +29,10 @@ const signup = async (req, res) => {
         });
         const jwtToken = (0, jwt_1.createJwtToken)(user);
         res.cookie("token", jwtToken, {
-            path: "/"
+            secure: true,
+            path: "/",
+            sameSite: 'none',
+            httpOnly: true
         });
         return res.status(201).send({
             error: false,
@@ -61,7 +64,10 @@ const login = async (req, res) => {
         }
         const jwtToken = (0, jwt_1.createJwtToken)(existingUser);
         res.cookie("token", jwtToken, {
-            path: "/"
+            path: "/",
+            secure: true,
+            httpOnly: true,
+            sameSite: 'none'
         });
         return res.status(200).send({
             error: false,

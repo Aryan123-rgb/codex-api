@@ -17,6 +17,7 @@ console.log(process.env.REACT_APP_BASE_URL);
 app.use((0, cors_1.default)({
     credentials: true,
     origin: process.env.REACT_APP_BASE_URL,
+    methods: ['GET', 'POST', 'PUT', 'DELETE']
 }));
 app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));

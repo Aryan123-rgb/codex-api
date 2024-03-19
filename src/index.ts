@@ -13,6 +13,7 @@ app.use(
     cors({
         credentials: true,
         origin: process.env.REACT_APP_BASE_URL,
+        methods: ['GET', 'POST', 'PUT', 'DELETE']
     })
 );
 app.use(bodyParser.json());
