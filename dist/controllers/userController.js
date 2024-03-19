@@ -28,12 +28,7 @@ const signup = async (req, res) => {
             username: username,
         });
         const jwtToken = (0, jwt_1.createJwtToken)(user);
-        res.cookie("token", jwtToken, {
-            path: "/",
-            expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
-            httpOnly: true,
-            sameSite: "lax",
-        });
+        res.cookie("token", jwtToken);
         return res.status(201).send({
             error: false,
             message: "SignUp successfull",
@@ -63,12 +58,7 @@ const login = async (req, res) => {
             return res.status(400).json({ error: true, message: "Wrong password" });
         }
         const jwtToken = (0, jwt_1.createJwtToken)(existingUser);
-        res.cookie("token", jwtToken, {
-            path: "/",
-            expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
-            httpOnly: true,
-            sameSite: "lax",
-        });
+        res.cookie("token", jwtToken);
         return res.status(200).send({
             error: false,
             message: "Login successfull",
