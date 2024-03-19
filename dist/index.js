@@ -12,9 +12,16 @@ const app = (0, express_1.default)();
 (0, dotenv_1.config)();
 const userRoutes_1 = require("./routes/userRoutes");
 const codeRoutes_1 = require("./routes/codeRoutes");
+const body_parser_1 = __importDefault(require("body-parser"));
+app.use((0, cors_1.default)({
+    credentials: true,
+    origin: process.env.REACT_APP_BASE_URL,
+}));
+app.use(body_parser_1.default.json());
+app.use(body_parser_1.default.urlencoded({ extended: true }));
 app.use(express_1.default.json());
+app.use(express_1.default.urlencoded({ extended: true }));
 app.use((0, cookie_parser_1.default)());
-app.use((0, cors_1.default)({ credentials: true, origin: process.env.REACT_APP_BASE_URL }));
 app.use("/user", userRoutes_1.userRouter);
 app.use('/code', codeRoutes_1.codeRouter);
 (0, dbConnect_1.dbConnect)();
