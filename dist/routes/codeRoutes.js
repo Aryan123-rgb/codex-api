@@ -11,4 +11,7 @@ exports.codeRouter = express_1.default.Router();
 exports.codeRouter.post("/create-new-repl", verifyToken_1.verifyToken, codeController_1.createNewRepl);
 exports.codeRouter.get("/load/:id", verifyToken_1.verifyToken, codeController_1.loadCode);
 exports.codeRouter.post("/compile-python-code", codeController_1.compilePythonCode);
+exports.codeRouter.post("/compile-javascript-code", codeController_1.compileJavascriptCode);
+exports.codeRouter.post("/compile-cpp-code", codeController_1.compileCppCode);
 exports.codeRouter.get("/get-all-codes", verifyToken_1.verifyToken, codeController_1.getAllCodes);
+exports.codeRouter.post("/save/:id", verifyToken_1.verifyToken, codeController_1.saveCode);

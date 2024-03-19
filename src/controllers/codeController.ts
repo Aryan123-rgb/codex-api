@@ -56,23 +56,99 @@ export const getAllCodes = async (req: AuthRequest, res: Response) => {
 }
 
 export const compilePythonCode = async (req: Request, res: Response) => {
-    const { code } = req.body
-    const pythonCode = `${code}`;
-    fs.writeFileSync('temp.py', pythonCode);
+    try {
+        const { code } = req.body;
+        if (!code) {
+            return res.status(400).send('No Python code provided.');
+        }
 
-    // Run the Python file as a child process
-    exec('python3 temp.py', (error, stdout, stderr) => {
+        const pythonCode = `${code}`;
+        fs.writeFileSync('temp.py', pythonCode);
+
+        exec('python3 temp.py', (error, stdout, stderr) => {
+            if (error) {
+                console.log(`Error executing Python file: ${error.message}`);
+                return res.status(500).send('Internal Server Error');
+            }
+
+            fs.unlinkSync('temp.py');
+
+            if (stderr) {
+                console.error(`Python stderr: ${stderr}`);
+            }
+
+            res.status(200).json(stdout);
+        });
+    } catch (err) {
+        console.log(`Error compiling Python code: ${err}`);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
+export const compileJavascriptCode = async (req: Request, res: Response) => {
+    try {
+        const { code } = req.body;
+        if (!code) {
+            return res.status(400).send('No JavaScript code provided.');
+        }
+
+        const javascriptCode = `${code}`;
+        fs.writeFileSync('index.js', javascriptCode);
+
+        exec('node index.js', (error, stdout, stderr) => {
+            if (error) {
+                console.error(`Error executing JavaScript file: ${error.message}`);
+                return res.status(500).send('Internal Server Error');
+            }
+
+            fs.unlinkSync('index.js');
+
+            if (stderr) {
+                console.error(`JavaScript stderr: ${stderr}`);
+            }
+
+            res.status(200).json(stdout);
+        });
+    } catch (err) {
+        console.error(`Error compiling JavaScript code: ${err}`);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
+export const compileCppCode = async (req: Request, res: Response) => {
+    const { code } = req.body;
+
+    fs.writeFileSync('main.cpp', code);
+
+    exec('g++ main.cpp -o main', (error, stdout, stderr) => {
         if (error) {
-            console.error(`Error executing Python file: ${error.message}`);
+            console.error(`Error compiling C++ code: ${error.message}`);
             return res.status(500).send('Internal Server Error');
         }
 
-        // Remove the temporary Python file
-        fs.unlinkSync('temp.py');
+        if (stderr) {
+            console.error(`Compilation warning: ${stderr}`);
+        }
 
-        res.status(200).json(stdout);
+        exec('./main', (execError, execStdout, execStderr) => {
+            if (execError) {
+                console.error(`Error executing compiled binary: ${execError.message}`);
+                return res.status(500).send('Internal Server Error');
+            }
+
+            if (execStderr) {
+                console.error(`Execution warning: ${execStderr}`);
+            }
+
+            // Remove the temporary files
+            fs.unlinkSync('main.cpp');
+            fs.unlinkSync('main');
+
+            // Send the output of the compiled code
+            res.status(200).json(execStdout);
+        });
     });
-}
+};
 
 export const saveCode = async (req: Request, res: Response) => {
     try {
