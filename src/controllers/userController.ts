@@ -28,12 +28,7 @@ export const signup = async (req: Request, res: Response) => {
 
         const jwtToken = createJwtToken(user);
 
-        res.cookie("token", jwtToken, {
-            path: "/",
-            expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
-            httpOnly: true,
-            sameSite: "lax",
-        });
+        res.cookie("token", jwtToken);
 
         return res.status(201).send({
             error: false,
@@ -71,12 +66,7 @@ export const login = async (req: Request, res: Response) => {
 
         const jwtToken = createJwtToken(existingUser);
 
-        res.cookie("token", jwtToken, {
-            path: "/",
-            expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
-            httpOnly: true,
-            sameSite: "lax",
-        });
+        res.cookie("token", jwtToken);
 
         return res.status(200).send({
             error: false,
