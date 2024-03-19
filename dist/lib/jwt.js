@@ -9,7 +9,7 @@ const createJwtToken = (user) => {
     const jwtToken = jsonwebtoken_1.default.sign({
         _id: user._id,
         email: user.email,
-    }, process.env.JWT_KEY);
+    }, "process.env.JWT_KEY!");
     return jwtToken;
 };
 exports.createJwtToken = createJwtToken;

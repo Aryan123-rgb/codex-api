@@ -28,7 +28,9 @@ const signup = async (req, res) => {
             username: username,
         });
         const jwtToken = (0, jwt_1.createJwtToken)(user);
-        res.cookie("token", jwtToken);
+        res.cookie("token", jwtToken, {
+            path: "/"
+        });
         return res.status(201).send({
             error: false,
             message: "SignUp successfull",
@@ -58,7 +60,9 @@ const login = async (req, res) => {
             return res.status(400).json({ error: true, message: "Wrong password" });
         }
         const jwtToken = (0, jwt_1.createJwtToken)(existingUser);
-        res.cookie("token", jwtToken);
+        res.cookie("token", jwtToken, {
+            path: "/"
+        });
         return res.status(200).send({
             error: false,
             message: "Login successfull",

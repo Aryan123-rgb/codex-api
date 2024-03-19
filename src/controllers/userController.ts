@@ -28,7 +28,9 @@ export const signup = async (req: Request, res: Response) => {
 
         const jwtToken = createJwtToken(user);
 
-        res.cookie("token", jwtToken);
+        res.cookie("token", jwtToken, {
+            path: "/"
+        });
 
         return res.status(201).send({
             error: false,
@@ -66,7 +68,9 @@ export const login = async (req: Request, res: Response) => {
 
         const jwtToken = createJwtToken(existingUser);
 
-        res.cookie("token", jwtToken);
+        res.cookie("token", jwtToken, {
+            path: "/"
+        });
 
         return res.status(200).send({
             error: false,
