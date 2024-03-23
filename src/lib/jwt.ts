@@ -12,7 +12,7 @@ export const createJwtToken = (user: User): string => {
             _id: user._id,
             email: user.email,
         },
-        "process.env.JWT_KEY!"
+        process.env.JWT_KEY!
     );
 
     return jwtToken;
