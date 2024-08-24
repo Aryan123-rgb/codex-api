@@ -7,14 +7,14 @@ const app = express();
 config();
 import { userRouter } from "./routes/userRoutes";
 import { codeRouter } from "./routes/codeRoutes";
-import bodyParser from 'body-parser'
-console.log(process.env.REACT_APP_BASE_URL)
+import bodyParser from "body-parser";
+console.log(process.env.REACT_APP_BASE_URL);
 app.use(
-    cors({
-        credentials: true,
-        origin: process.env.REACT_APP_BASE_URL,
-        methods: ['GET', 'POST', 'PUT', 'DELETE']
-    })
+  cors({
+    credentials: true,
+    origin: process.env.REACT_APP_BASE_URL,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  })
 );
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -22,11 +22,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-
-app.use("/user", userRouter);
-app.use('/code', codeRouter)
-
 dbConnect();
+app.use("/user", userRouter);
+app.use("/code", codeRouter);
+
 app.listen(process.env.PORT, () => {
-    console.log("Server is running on port " + 4000);
+  console.log("Server is running on port " + 4000);
 });
